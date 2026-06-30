@@ -1,0 +1,36 @@
+Algoritmo AnalizadorSeñales
+    Definir muestras, conteoRuido, iteracion Como Entero
+    Definir valorVoltaje, limiteMaximo Como Real
+    
+    limiteMaximo <- 4.2 
+    conteoRuido <- 0
+    
+    Escribir " ANALIZADOR DIGITAL DE SEÑALES (VOLTAJE) "
+    Escribir "¿Cuántas muestras del sensor desea analizar hoy?"
+    Leer muestras
+    
+    iteracion <- 1
+    Mientras iteracion <= muestras Hacer
+        Escribir "Ingrese el voltaje de la muestra N° ", iteracion, " (Rango 0V a 5V):"
+        Leer valorVoltaje
+        
+        Si valorVoltaje > limiteMaximo Entonces
+            Escribir "-> PICO DE RUIDO DETECTADO: ", valorVoltaje, " V (Peligro)"
+            conteoRuido <- conteoRuido + 1
+        Sino
+            Escribir "-> Voltaje estable: ", valorVoltaje, " V"
+        FinSi
+        
+        iteracion <- iteracion + 1
+    FinMientras
+
+    Escribir "RESUMEN DEL ANÁLISIS TÉCNICO:"
+    Escribir "Total de muestras procesadas: ", muestras
+    Escribir "Picos de sobrevoltaje detectados: ", conteoRuido
+    
+    Si conteoRuido > (muestras / 2) Entonces
+        Escribir "DIAGNÓSTICO: Sistema inestable. Requiere mantenimiento del filtro físico."
+    Sino
+        Escribir "DIAGNÓSTICO: Operación dentro de los parámetros normales."
+    FinSi
+FinAlgoritmo

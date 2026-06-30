@@ -1,0 +1,21 @@
+Algoritmo SucesionFibonacci
+    Definir cantidad, a, b, c, i Como Entero
+    Escribir "GENERADOR DE SUCESIÓN MATEMÁTICA DE FIBONACCI"
+    Escribir "¿Cuántos elementos de la secuencia desea calcular?"
+    Leer cantidad
+    
+    Si cantidad <= 0 Entonces
+        Escribir "Por favor, ingrese un número mayor a cero."
+    Sino
+        a <- 0
+        b <- 1
+        Escribir "Los primeros ", cantidad, " términos son:"
+        
+        Para i <- 1 Hasta cantidad Con Paso 1 Hacer
+            Escribir a
+            c <- a + b
+            a <- b
+            b <- c
+        FinPara
+    FinSi
+FinAlgoritmo

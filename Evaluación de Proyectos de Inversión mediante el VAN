@@ -1,0 +1,75 @@
+Algoritmo EvaluadorFinancieroMaster
+    Definir inversionInicial, tasaInteres, van, cuota, saldoFijo, interesMes, principalMes Como Real
+    Definir anos, i, periodosPago, j Como Entero
+    Definir flujosCaja Como Real // Declaración del arreglo
+    Dimensión flujosCaja[20]     // Soporta hasta 20 años de proyección
+    
+    Escribir "SISTEMA INTELIGENTE DE EVALUACIÓN FINANCIERA DE PROYECTOS (MÉTODO VAN)"
+    
+    Escribir "-> Ingrese el monto de la Inversión Inicial Requerida (S/.):"
+    Leer inversionInicial
+    
+    Escribir "-> Ingrese el horizonte de evaluación en años (Máximo 20):"
+    Leer anos
+    
+    Escribir "-> Ingrese la Tasa de Descuento / Costo de Oportunidad del Capital (en % anual):"
+    Leer tasaInteres
+    tasaInteres <- tasaInteres / 100 // Convertir porcentaje a decimal
+    
+    Escribir "Registro de Flujos de Caja Proyectados"
+    Para i <- 1 Hasta anos Con Paso 1 Hacer
+        Escribir "Ingrese el flujo de caja neto esperado para el Año ", i, " (S/.):"
+        Leer flujosCaja[i]
+    FinPara
+
+    // Fórmula analítica: VAN = -Inversion + Suma( Flujo_i / (1 + tasa)^i )
+    van <- -inversionInicial
+    Para i <- 1 Hasta anos Con Paso 1 Hacer
+        van <- van + (flujosCaja[i] / ((1 + tasaInteres) ^ i))
+    FinPara
+    
+    Escribir "                    RESULTADOS DE RENTABILIDAD                     "
+    Escribir "Valor Actual Neto (VAN) calculado: S/. ", van
+    
+    Si van > 0 Entonces
+        Escribir "DIAGNÓSTICO BANCARIO: [PROYECTO VIABLE Y RENTABLE]"
+        Escribir "El proyecto genera valor por encima del costo de capital. Se recomienda financiamiento."
+    Sino
+        Si van = 0 Entonces
+            Escribir "DIAGNÓSTICO BANCARIO: [PROYECTO EN PUNTO DE EQUILIBRIO]"
+            Escribir "El proyecto no genera ganancias extras, pero cubre la tasa mínima de retorno."
+        Sino
+            Escribir "DIAGNÓSTICO BANCARIO: [PROYECTO RECHAZADO / NO VIABLE]"
+            Escribir "El proyecto destruye valor económico. Inversión de alto riesgo."
+        FinSi
+    FinSi
+
+    Si van > 0 Entonces
+        Escribir "¿Desea simular el cronograma del préstamo para financiar la inversión?"
+        Escribir "Ingrese la cantidad de meses para pagar el crédito:"
+        Leer periodosPago
+        
+        Definir tasaMensual Como Real
+        tasaMensual <- tasaInteres / 12
+        cuota <- (inversionInicial * tasaMensual) / (1 - ((1 + tasaMensual) ^ (-periodosPago)))
+        
+        Escribir "                CRONOGRAMA DE AMORTIZACIÓN MENSUAL                  "
+        Escribir "Mes |   Saldo Inicial   |     Cuota Fija    |    Interés    |   Amortización   |   Saldo Final"
+        
+        saldoFijo <- inversionInicial
+        Para j <- 1 Hasta periodosPago Con Paso 1 Hacer
+            interesMes <- saldoFijo * tasaMensual
+            principalMes <- cuota - interesMes
+            Definir saldoFinal Como Real
+            saldoFinal <- saldoFijo - principalMes
+            
+            Si j = periodosPago Entonces
+                saldoFinal <- 0
+            FinSi
+            
+            Escribir j, "   |   S/. ", Redon(saldoFijo*100)/100, "   |   S/. ", Redon(cuota*100)/100, "   |   S/. ", Redon(interesMes*100)/100, "   |   S/. ", Redon(principalMes*100)/100, "   |   S/. ", Redon(saldoFinal*100)/100
+            
+            saldoFijo <- saldoFinal
+        FinPara
+    FinSi
+FinAlgoritmo

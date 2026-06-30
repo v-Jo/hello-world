@@ -1,0 +1,9 @@
+Proceso hello
+Definir rpt Como Entero
+Escribir "Sabes ingles basico a mas? 1=Sí, 2=No"
+Leer rpt
+Segun rpt Hacer
+1: Escribir "Hello World"
+2: Escribir "Hola Mundo"
+FinSegun
+FinProceso

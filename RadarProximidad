@@ -1,0 +1,26 @@
+Algoritmo RadarProximidad
+    Definir distancia, contador Como Entero
+    Escribir " SISTEMA DE MONITOREO DE RADAR MECATRÓNICO "
+    Escribir "Simulando lectura de 5 ciclos de escaneo..."
+    
+    Para contador <- 1 Hasta 5 Con Paso 1 Hacer
+        Escribir "Ciclo de escaneo N° ", contador
+        Escribir "Ingrese la distancia detectada por el sensor (en cm):"
+        Leer distancia
+        
+        Si distancia <= 0 Entonces
+            Escribir "ERROR: Lectura del sensor inválida o fuera de rango."
+        Sino
+            Si distancia < 15 Entonces
+                Escribir "ALERTAL: ¡FRENADO DE EMERGENCIA ACTIVO! Obstáculo a ", distancia, " cm."
+            Sino
+                Si distancia >= 15 Y distancia <= 50 Entonces
+                    Escribir "ADVERTENCIA: Objeto peligroso detectado a ", distancia, " cm. Reduciendo velocidad."
+                Sino
+                    Escribir "ESTADO: Ruta despejada. Objeto seguro a ", distancia, " cm."
+                FinSi
+            FinSi
+        FinSi
+    FinPara
+    Escribir "Escaneo finalizado correctamente."
+FinAlgoritmo

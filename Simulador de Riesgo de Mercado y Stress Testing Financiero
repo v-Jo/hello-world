@@ -1,0 +1,83 @@
+Algoritmo SimuladorStressTestingBancaria
+    Definir capitalInicial, ingresosBase, costosFijos, volatilidadMercado Como Real
+    Definir simulaciones, anosProyeccion, i, j, quiebras, escenariosCriticos Como Entero
+    Definir cajaActual, factorAleatorio, ingresosSimulados, promedioCaja Como Real
+    Definir matrizResultados Como Real
+    
+    Dimension matrizResultados[101, 6] 
+    
+    Escribir " ENGINE ULTRA: SIMULADOR DE STRESS TESTING Y RIESGO DE QUIEBRA BANCARIA "
+    
+    Escribir "-> Ingrese el Capital Líquido o Caja Inicial de la empresa (S/.):"
+    Leer capitalInicial
+    Escribir "-> Ingrese la proyección de Ingresos Anuales Base (S/.):"
+    Leer ingresosBase
+    Escribir "-> Ingrese los Costos y Gastos Fijos Anuales (S/.):"
+    Leer costosFijos
+    Escribir "-> Ingrese el Factor de Volatilidad del Mercado (En %, ejm: 15 para simular crisis):"
+    Leer volatilidadMercado
+    volatilidadMercado <- volatilidadMercado / 100
+    
+    simulaciones <- 100
+    anosProyeccion <- 5  
+    quiebras <- 0
+    escenariosCriticos <- 0
+    
+    Escribir "[PROCESANDO] Ejecutando ", simulaciones, " escenarios macroeconómicos aleatorios..."
+    
+    Para i <- 1 Hasta simulaciones Con Paso 1 Hacer
+        cajaActual <- capitalInicial
+        matrizResultados[i, 1] <- cajaActual 
+        
+        Para j <- 2 Hasta (anosProyeccion + 1) Con Paso 1 Hacer
+            factorAleatorio <- (Azar(201) - 100) / 100 
+            
+            ingresosSimulados <- ingresosBase * (1 + (volatilidadMercado * factorAleatorio))
+            
+            cajaActual <- cajaActual + ingresosSimulados - costosFijos
+            
+            matrizResultados[i, j] <- cajaActual
+            
+            Si cajaActual < 0 Entonces
+                quiebras <- quiebras + 1
+                j <- anosProyeccion + 2 
+            Sino
+                Si cajaActual < (capitalInicial * 0.25) Entonces
+                    escenariosCriticos <- escenariosCriticos + 1
+                FinSi
+            FinSi
+        FinPara
+    FinPara
+    
+    Definir sumaFinal, probabilidadQuiebra, probabilidadAlerta Como Real
+    sumaFinal <- 0
+    
+    Para i <- 1 Hasta simulaciones Con Paso 1 Hacer
+        Si matrizResultados[i, 6] > 0 Entonces
+            sumaFinal <- sumaFinal + matrizResultados[i, 6]
+        FinSi
+    FinPara
+    
+    promedioCaja <- sumaFinal / (simulaciones - quiebras)
+    probabilidadQuiebra <- (quiebras / simulaciones) * 100
+    probabilidadAlerta <- (escenariosCriticos / (simulaciones * anosProyeccion)) * 100
+    
+   
+    Escribir "                      DIAGNÓSTICO FINAL DE RIESGO                   "
+    Escribir "-> Escenarios simulados exitosamente: ", simulaciones
+    Escribir "-> Casos donde la empresa colapsó (Caja < 0): ", quiebras
+    Escribir "-> PROBABILIDAD ESTADÍSTICA DE QUIEBRA: ", probabilidadQuiebra, " %"
+    Escribir "-> Probabilidad de estrés o iliquidez temporal: ", Redon(probabilidadAlerta*100)/100, " %"
+    Escribir "-> Saldo promedio esperado en caja al Año 5 (Escenarios vivos): S/. ", Redon(promedioCaja*100)/100
+    
+    Escribir "EVALUACIÓN DEL COMITÉ DE RIESGOS BANCARIOS:"
+    Si probabilidadQuiebra > 25 Entonces
+        Escribir "[ALERTA ROJA] El riesgo de impago es inaceptable. Negar créditos y reestructurar."
+    Sino
+        Si probabilidadQuiebra > 5 Y probabilidadQuiebra <= 25 Entonces
+            Escribir "[ALERTA AMARILLA] Empresa sensible a crisis de mercado. Aprobar con garantías reales."
+        Sino
+            Escribir "[SEÑAL VERDE] Negocio altamente robusto. Resistencia demostrada al estrés financiero."
+        FinSi
+    FinSi
+FinAlgoritmo
